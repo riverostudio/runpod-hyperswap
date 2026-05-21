@@ -18,15 +18,12 @@ WORKSPACE = "/tmp/facefusion_jobs"
 
 
 def _find_facefusion_dir():
-    """Auto-detect FaceFusion install path (3.6.0=/opt/facefusion, 3.6.1=/facefusion)."""
+    """Auto-detect FaceFusion install path. Fast, no recursive scan."""
     candidates = ["/facefusion", "/opt/facefusion", "/app/facefusion", "/workspace/facefusion"]
     for c in candidates:
         if os.path.isfile(os.path.join(c, "facefusion.py")):
             return c
-    matches = glob.glob("/facefusion*/facefusion.py") + glob.glob("/opt/**/facefusion.py", recursive=True)
-    if matches:
-        return os.path.dirname(matches[0])
-    return "/facefusion"
+    return "/facefusion"  # safe default for 3.6.1
 
 
 FACEFUSION_DIR = _find_facefusion_dir()
