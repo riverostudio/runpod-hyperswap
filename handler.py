@@ -11,10 +11,26 @@ import uuid
 import base64
 import time
 import subprocess
+import glob
 import runpod
 
 WORKSPACE = "/tmp/facefusion_jobs"
-FACEFUSION_DIR = "/opt/facefusion"
+
+
+def _find_facefusion_dir():
+    """Auto-detect FaceFusion install path (3.6.0=/opt/facefusion, 3.6.1=/facefusion)."""
+    candidates = ["/facefusion", "/opt/facefusion", "/app/facefusion", "/workspace/facefusion"]
+    for c in candidates:
+        if os.path.isfile(os.path.join(c, "facefusion.py")):
+            return c
+    matches = glob.glob("/facefusion*/facefusion.py") + glob.glob("/opt/**/facefusion.py", recursive=True)
+    if matches:
+        return os.path.dirname(matches[0])
+    return "/facefusion"
+
+
+FACEFUSION_DIR = _find_facefusion_dir()
+print(f"[HyperSwap] FACEFUSION_DIR detected: {FACEFUSION_DIR}")
 
 os.makedirs(WORKSPACE, exist_ok=True)
 
