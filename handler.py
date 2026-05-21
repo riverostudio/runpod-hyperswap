@@ -91,7 +91,6 @@ def handler(job):
             "--face-detector-score", "0.3",
             "--output-image-quality", "95",
             "--execution-providers", "cuda",
-            "--skip-download",  # Models should already be in image
         ]
 
         # Add face enhancer if requested
